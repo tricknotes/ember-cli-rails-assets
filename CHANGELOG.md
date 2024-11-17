@@ -1,4 +1,4 @@
-main
+0.7.1
 ------
 
 * Rely on Rails Engine to mix `app/helpers` modules into
