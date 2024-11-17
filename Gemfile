@@ -14,7 +14,6 @@ gem "rails", rails_constraint
 gem "webrick"
 
 group :development, :test do
-  gem "pry"
   gem "ember-cli-rails", github: "thoughtbot/ember-cli-rails"
 end
 
