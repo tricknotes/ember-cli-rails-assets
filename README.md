@@ -12,7 +12,7 @@ actively supported method of serving EmberCLI applications.
 However, for the sake of backwards compatibility, `ember-cli-rails-assets`
 supports injecting the EmberCLI-generated assets into an existing Rails layout.
 
-[ember-cli-rails]: https://github.com/thoughtbot/ember-cli-rails
+[ember-cli-rails]: https://github.com/tricknotes/ember-cli-rails
 
 ## Install
 
@@ -52,7 +52,7 @@ module.exports = function(defaults) {
 };
 ```
 
-[README]: https://github.com/thoughtbot/ember-cli-rails#readme
+[README]: https://github.com/tricknotes/ember-cli-rails#readme
 
 ## Mount
 
@@ -141,7 +141,7 @@ See the [CONTRIBUTING] document.
 Thank you, [contributors]!
 
   [CONTRIBUTING]: CONTRIBUTING.md
-  [contributors]: https://github.com/seanpdoyle/ember-cli-rails-assets/graphs/contributors
+  [contributors]: https://github.com/tricknotes/ember-cli-rails-assets/graphs/contributors
 
 ## License
 
@@ -158,8 +158,9 @@ ember-cli-rails was originally created by
 [Jonathan Jackson][rondale-sc].
 
 ember-cli-rails-assets was extracted from ember-cli-rails is maintained by
-[Sean Doyle][seanpdoyle].
+[Sean Doyle][seanpdoyle] and [Ryunosuke Sato][tricknotes].
 
 [rwz]: https://github.com/rwz
 [rondale-sc]: https://github.com/rondale-sc
 [seanpdoyle]: https://github.com/seanpdoyle
+[tricknotes]: https://github.com/tricknotes
