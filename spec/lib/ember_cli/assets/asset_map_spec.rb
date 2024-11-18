@@ -65,7 +65,40 @@ describe EmberCli::Assets::AssetMap do
         "foo/vendor-abc123.css",
       ])
     end
+    
+    it 'can find additional CSS files found inside the HTML' do
+      asset_map = {
+        'assets' => {
+          'not-a-match' => {},
+          'bar.css' => 'bar-abc123.css',
+          'vendor.css' => 'vendor-abc123.css',
+          'additional.css' => 'additional-abc123.css',
+          'here/is/another/file.css' => 'here/is/another/file-abc123.css'
+        },
+        'prepend' => 'foo/'
+      }
+      index_html = StringIO.new(<<~HTML)
+        <html>
+          <head>
+            <link rel="stylesheet" href="bar-abc123.css"></link>
+            <link rel="stylesheet" href="vendor-abc123.css"></link>
+            <link rel="stylesheet" href="additional-abc123.css"></link>
+            <link rel="stylesheet" href="here/is/another/file-abc123.css"></link>
+          </head>
+        </html>
+      HTML
+      assets = build_assets(name: 'bar', asset_map: asset_map, index_html: index_html)
 
+      stylesheets = assets.stylesheets
+
+      expect(stylesheets).to match_array([
+        "foo/additional-abc123.css",
+        "foo/bar-abc123.css", 
+        "foo/here/is/another/file-abc123.css", 
+        "foo/vendor-abc123.css"
+      ])
+    end
+    
     context "when the asset_map is empty" do
       it "raises a BuildError" do
         assets = build_assets(asset_map: {}, name: "bar", index_html: StringIO.new)

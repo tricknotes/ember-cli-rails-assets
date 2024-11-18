@@ -9,15 +9,17 @@ describe EmberCli::Assets::DirectoryAssetMap do
       create_file("first")
       create_file("second")
       create_file("third")
-
+      create_file("fourth/fifth")
       directory_manifest = build_directory_asset_map(directory).to_h
 
       expect(directory_manifest["prepend"]).to eq("assets/")
-      expect(directory_manifest["assets"]).to match a_hash_including(
+      # Strict match the hash
+      expect(directory_manifest["assets"]).to eq({
         "first" => "first",
         "second" => "second",
         "third" => "third",
-      )
+        "fourth/fifth" => "fourth/fifth",
+      })
     end
   end
 
@@ -28,6 +30,7 @@ describe EmberCli::Assets::DirectoryAssetMap do
   def create_file(name)
     path = directory.join(name)
 
+    FileUtils.mkdir_p(File.dirname(path))
     FileUtils.touch(path)
 
     File.new(path)

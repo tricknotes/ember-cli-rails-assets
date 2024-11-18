@@ -16,19 +16,20 @@ module EmberCli
 
       attr_reader :directory
 
+      # Returns a hash of files in the directory
       def files_with_data
-        files.reduce({}) do |manifest, file|
-          name = File.basename(file.path)
-
+        files.each_with_object({}) do |file, manifest|
+          name = Pathname.new(file).relative_path_from(directory).to_s
           manifest[name] = name
-
-          manifest
         end
       end
-
+      
+      # Returns a recursive list of files in the directory
 
       def files
-        directory.children.map { |path| File.new(path) }
+        directory.glob('**/*').select { |f| f.file? }.map do |file|
+          File.new(file)
+        end
       end
     end
   end
