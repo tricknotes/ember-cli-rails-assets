@@ -118,8 +118,8 @@ path to prepend:
 <%= include_ember_script_tags :frontend, prepend: "/" %>
 <%= include_ember_stylesheet_tags :frontend, prepend: "/" %>
 
-<%= include_ember_script_tags :admin_panel, prepend: "/" %>
-<%= include_ember_stylesheet_tags :admin_panel, prepend: "/" %>
+<%= include_ember_script_tags :admin_panel, prepend: "/admin_panel/" %>
+<%= include_ember_stylesheet_tags :admin_panel, prepend: "/admin_panel/" %>
 ```
 
 ## EmberCLI support
