@@ -1,3 +1,4 @@
+require "ember_cli/assets/errors"
 require "ember_cli/assets/lookup"
 require "ember_cli/assets/paths"
 
@@ -16,9 +17,22 @@ module EmberCliRailsAssetsHelper
   end
 
   def include_ember_stylesheet_tags(name, prepend: "")
-    EmberCli[name].build
+    app = EmberCli[name]
+    app.build
 
-    assets = EmberCli::Assets::Lookup.new(EmberCli[name])
+    paths = EmberCli::Assets::Paths.new(app)
+
+    if paths.vite?
+      raise EmberCli::Assets::NotSupportedError, <<~MSG
+        `include_ember_stylesheet_tags` does not support Vite-based
+        applications (`ember-cli >= 6.8`).
+
+        `include_ember_script_tags` already emits their stylesheet tags,
+        so remove this call.
+      MSG
+    end
+
+    assets = EmberCli::Assets::Lookup.new(app)
 
     assets.stylesheet_assets.
       map { |src| [prepend, src].join }.
