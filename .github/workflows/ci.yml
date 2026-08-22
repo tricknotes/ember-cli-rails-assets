@@ -8,7 +8,12 @@ on:
 
 jobs:
   build:
+    # Named explicitly so that `experimental` stays out of the job name.
+    name: "build (${{ matrix.ruby }}, ${{ matrix.rails }})"
     runs-on: "ubuntu-latest"
+
+    # Rails main is a moving target, so let it break without failing the build.
+    continue-on-error: ${{ matrix.experimental || false }}
 
     strategy:
       fail-fast: false
@@ -22,6 +27,7 @@ jobs:
             rails: "8.0"
           - ruby: "3.4"
             rails: "main"
+            experimental: true
 
     env:
       RAILS_ENV: test
@@ -39,7 +45,7 @@ jobs:
       - name: Install NodeJS
         uses: actions/setup-node@v2
         with:
-          node-version: "18.x"
+          node-version: "20.x"
 
       - name: Setup Google Chrome
         uses: browser-actions/setup-chrome@latest
