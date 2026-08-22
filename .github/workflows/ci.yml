@@ -8,6 +8,8 @@ on:
 
 jobs:
   build:
+    # Named explicitly so that `experimental` stays out of the job name.
+    name: "build (${{ matrix.ruby }}, ${{ matrix.rails }})"
     runs-on: "ubuntu-latest"
 
     # Rails main is a moving target, so let it break without failing the build.
