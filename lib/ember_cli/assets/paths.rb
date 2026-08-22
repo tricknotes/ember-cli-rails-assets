@@ -1,3 +1,5 @@
+require "nokogiri"
+
 module EmberCli
   module Assets
     class Paths
@@ -19,6 +21,13 @@ module EmberCli
 
       def index_html
         app.dist_path.join("index.html")
+      end
+
+      # Vite builds (ember-cli >= 6.8) boot from ES modules in index.html,
+      # while classic builds emit plain script tags.
+      def vite?
+        index_html.exist? &&
+          !Nokogiri::HTML5(index_html.read).at_css('script[type="module"]').nil?
       end
 
       protected
