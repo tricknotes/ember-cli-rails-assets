@@ -1,3 +1,9 @@
+main
+------
+
+* Raise `EmberCli::Assets::NotSupportedError` with a descriptive message when
+  `include_ember_stylesheet_tags` is called for a Vite-based application
+
 0.8.0
 ------
 

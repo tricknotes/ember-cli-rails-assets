@@ -33,8 +33,9 @@ $ bundle install
 To configure your project to use `ember-cli-rails`, follow the instructions
 listed in the [`ember-cli-rails` README][README].
 
-To configure your project to user `ember-cli-rails-assets`, ensure each Ember
-application's `ember-cli-build.js` includes the following values:
+To configure a classic (Broccoli-based) Ember application to use
+`ember-cli-rails-assets`, ensure its `ember-cli-build.js` includes the
+following values:
 
 ```js
 // frontend/ember-cli-build.js
@@ -53,6 +54,21 @@ module.exports = function(defaults) {
 ```
 
 [README]: https://github.com/tricknotes/ember-cli-rails#readme
+
+### Vite-based applications
+
+Vite-based applications (generated with `ember-cli >= 6.8`) require no build
+configuration. For them, use `include_ember_script_tags` on its own: it emits
+everything the application needs to boot — the configuration `<meta>` tag, the
+stylesheet and `modulepreload` links, and the ES module script tags —
+extracted from the generated `index.html`:
+
+```erb
+<%= include_ember_script_tags :frontend %>
+```
+
+`include_ember_stylesheet_tags` only supports classic applications, and raises
+an error when called for a Vite-based application.
 
 ## Mount
 
@@ -126,7 +142,9 @@ path to prepend:
 
 This project supports:
 
-* EmberCLI versions `>= 1.13.13`
+* EmberCLI versions `>= 1.13.13` using the classic (Broccoli-based) build
+* EmberCLI versions `>= 6.8` using the Vite-based build, with
+  `include_ember_script_tags` only
 
 ## Ruby and Rails support
 

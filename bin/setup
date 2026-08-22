@@ -10,8 +10,9 @@ bundle check || bundle install
 mkdir -p .git/safe
 
 if ! [ -d spec/dummy/my-app ]; then
-  # Pinned to the last release built by Broccoli. Newer releases are built by
-  # Vite, which this gem does not support yet.
+  # Pinned to the last release built by Broccoli: the feature suite
+  # exercises the classic build. The Vite path of
+  # `include_ember_script_tags` is exercised by ember-cli-rails' own suite.
   git clone --branch v6.7.2 \
     https://github.com/kellyselden/ember-cli-output.git spec/dummy/my-app
 
