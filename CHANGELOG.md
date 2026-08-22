@@ -1,4 +1,4 @@
-main
+0.8.1
 ------
 
 * Raise `EmberCli::Assets::NotSupportedError` with a descriptive message when
