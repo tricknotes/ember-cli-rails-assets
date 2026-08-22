@@ -10,6 +10,9 @@ jobs:
   build:
     runs-on: "ubuntu-latest"
 
+    # Rails main is a moving target, so let it break without failing the build.
+    continue-on-error: ${{ matrix.experimental || false }}
+
     strategy:
       fail-fast: false
       matrix:
@@ -22,6 +25,7 @@ jobs:
             rails: "8.0"
           - ruby: "3.4"
             rails: "main"
+            experimental: true
 
     env:
       RAILS_ENV: test
