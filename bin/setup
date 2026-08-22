@@ -10,7 +10,10 @@ bundle check || bundle install
 mkdir -p .git/safe
 
 if ! [ -d spec/dummy/my-app ]; then
-  git clone https://github.com/kellyselden/ember-cli-output.git spec/dummy/my-app
+  # Pinned to the last release built by Broccoli. Newer releases are built by
+  # Vite, which this gem does not support yet.
+  git clone --branch v6.7.2 \
+    https://github.com/kellyselden/ember-cli-output.git spec/dummy/my-app
 
   bin/setup_ember
 fi
