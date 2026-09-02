@@ -14,7 +14,7 @@ gem "rails", rails_constraint
 gem "webrick"
 
 group :development, :test do
-  gem "ember-cli-rails", github: "tricknotes/ember-cli-rails"
+  gem "ember-cli-rails", github: "tricknotes/ember-cli-rails", branch: "vite-recompile-on-change"
 end
 
 group :test do
