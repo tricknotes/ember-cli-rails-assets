@@ -1,3 +1,13 @@
+Unreleased
+------
+
+* Serve the `include_ember_script_tags` startup tags from Vite's development
+  server when ember-cli-rails serves the application from it, rewriting
+  root-relative URLs to absolute URLs on the server
+* Leave protocol-relative (`//`) URLs alone when remapping startup tags
+* Raise the Vite guidance from `include_ember_stylesheet_tags` for
+  applications served by the development server, whose `dist` may not exist
+
 0.8.1
 ------
 
