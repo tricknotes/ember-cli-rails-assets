@@ -12,6 +12,10 @@ jobs:
     name: "build (${{ matrix.ruby }}, ${{ matrix.rails }})"
     runs-on: "ubuntu-latest"
 
+    # Jobs normally finish in about 3 minutes, so cap hung runs well short
+    # of GitHub's 6-hour default.
+    timeout-minutes: 15
+
     # Rails main is a moving target, so let it break without failing the build.
     continue-on-error: ${{ matrix.experimental || false }}
 
