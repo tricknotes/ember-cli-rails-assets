@@ -67,6 +67,12 @@ extracted from the generated `index.html`:
 <%= include_ember_script_tags :frontend %>
 ```
 
+When ember-cli-rails serves the application from Vite's development server in
+`development`, `include_ember_script_tags` reads `index.html` from the server
+instead of a build directory, and emits the startup tags with absolute URLs
+pointing at the server. Nothing is built, so changes to the application are
+picked up by reloading the page.
+
 `include_ember_stylesheet_tags` only supports classic applications, and raises
 an error when called for a Vite-based application.
 
