@@ -19,5 +19,12 @@ end
 
 group :test do
   gem "cuprite"
-  gem "rspec-rails"
+
+  if rails_version == "main"
+    # Until a release carries the fixes for frozen Rails internals,
+    # e.g. https://github.com/rspec/rspec-rails/pull/2915
+    gem "rspec-rails", github: "rspec/rspec-rails", branch: "main"
+  else
+    gem "rspec-rails"
+  end
 end
