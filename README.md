@@ -136,10 +136,11 @@ To render the asset elements without using a `<base>` element, pass the URL or
 path to prepend:
 
 ```erb
-<-- assuming Ember's assets are mounted to `"/"` -->
+<!-- assuming Ember's assets are mounted to `"/"` -->
 <%= include_ember_script_tags :frontend, prepend: "/" %>
 <%= include_ember_stylesheet_tags :frontend, prepend: "/" %>
 
+<!-- assuming Ember's assets are mounted to `"/admin_panel/"` -->
 <%= include_ember_script_tags :admin_panel, prepend: "/admin_panel/" %>
 <%= include_ember_stylesheet_tags :admin_panel, prepend: "/admin_panel/" %>
 ```
