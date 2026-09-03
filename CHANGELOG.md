@@ -1,4 +1,4 @@
-Unreleased
+0.9.0
 ------
 
 * Serve the `include_ember_script_tags` startup tags from Vite's development
