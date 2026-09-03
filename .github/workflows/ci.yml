@@ -25,6 +25,8 @@ jobs:
             rails: "8.0"
           - ruby: "3.4"
             rails: "8.0"
+          - ruby: "4.0"
+            rails: "8.1"
           - ruby: "3.4"
             rails: "main"
             experimental: true
