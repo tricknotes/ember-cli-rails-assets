@@ -3,10 +3,6 @@ require "rails_helper"
 describe EmberCliRailsAssetsHelper do
   describe "#include_ember_script_tags" do
     context "when the application is served by Vite's development server" do
-      # The development server API ships with the ember-cli-rails release
-      # that serves Vite-based applications from the development server, so
-      # plain doubles stand in for `EmberCli::App` and `EmberCli::DevServer`
-      # here until the Gemfile can be pointed at a release carrying it.
       it "emits the startup tags with root-relative URLs rewritten onto the server" do
         index_html = <<~HTML
           <html>
@@ -22,13 +18,13 @@ describe EmberCliRailsAssetsHelper do
             </body>
           </html>
         HTML
-        dev_server = double(
-          "EmberCli::DevServer",
+        dev_server = instance_double(
+          EmberCli::DevServer,
           index_html: index_html,
           origin: "http://127.0.0.1:4200",
         )
-        app = double(
-          "EmberCli::App",
+        app = instance_double(
+          EmberCli::App,
           build: true,
           dev_server?: true,
           dev_server: dev_server,
@@ -51,7 +47,7 @@ describe EmberCliRailsAssetsHelper do
   describe "#include_ember_stylesheet_tags" do
     context "when the application is served by Vite's development server" do
       it "raises an error pointing at `include_ember_script_tags`" do
-        app = double("EmberCli::App", build: true, dev_server?: true)
+        app = instance_double(EmberCli::App, build: true, dev_server?: true)
         paths = instance_double(EmberCli::Assets::Paths)
         allow(EmberCli).to receive(:[]).with(:frontend).and_return(app)
         allow(EmberCli::Assets::Paths).
@@ -66,7 +62,7 @@ describe EmberCliRailsAssetsHelper do
 
     context "when the application is built with Vite" do
       it "raises an error pointing at `include_ember_script_tags`" do
-        app = double("EmberCli::App", build: true, dev_server?: false)
+        app = instance_double(EmberCli::App, build: true, dev_server?: false)
         paths = instance_double(EmberCli::Assets::Paths, vite?: true)
         allow(EmberCli).to receive(:[]).with(:frontend).and_return(app)
         allow(EmberCli::Assets::Paths).

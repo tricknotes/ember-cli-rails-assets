@@ -14,7 +14,9 @@ gem "rails", rails_constraint
 gem "webrick"
 
 group :development, :test do
-  gem "ember-cli-rails"
+  # The specs verify doubles against the development-server API,
+  # which ships with 0.13.0.
+  gem "ember-cli-rails", ">= 0.13.0"
 end
 
 group :test do
