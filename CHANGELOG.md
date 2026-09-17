@@ -1,3 +1,9 @@
+main
+------
+
+* Emit the scripts and stylesheets that `index.html` points outside the build (a CDN, a font service) as they are, instead of failing to resolve them against the build output
+* Ignore `<script>` tags without a `src` (an inline script) when collecting the build's scripts
+
 0.9.0
 ------
 

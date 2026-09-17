@@ -42,6 +42,32 @@ describe EmberCliRailsAssetsHelper do
         expect(tags).to include(%{src="//cdn.example.com/protocol-relative.js"})
       end
     end
+
+    context "when the application is a classic build" do
+      it "mounts the build's scripts onto `prepend`, leaving the ones hosted elsewhere untouched" do
+        app = instance_double(EmberCli::App, build: true, dev_server?: false)
+        paths = instance_double(EmberCli::Assets::Paths, vite?: false)
+        lookup = instance_double(
+          EmberCli::Assets::Lookup,
+          javascript_assets: [
+            "assets/vendor-abc123.js",
+            "https://cdn.example.com/analytics.js",
+            "//cdn.example.com/protocol-relative.js",
+          ],
+        )
+        allow(EmberCli).to receive(:[]).with(:frontend).and_return(app)
+        allow(EmberCli::Assets::Paths).
+          to receive(:new).with(app).and_return(paths)
+        allow(EmberCli::Assets::Lookup).
+          to receive(:new).with(app).and_return(lookup)
+
+        tags = helper.include_ember_script_tags(:frontend, prepend: "http://example.com/")
+
+        expect(tags).to include(%{src="http://example.com/assets/vendor-abc123.js"})
+        expect(tags).to include(%{src="https://cdn.example.com/analytics.js"})
+        expect(tags).to include(%{src="//cdn.example.com/protocol-relative.js"})
+      end
+    end
   end
 
   describe "#include_ember_stylesheet_tags" do
@@ -72,6 +98,32 @@ describe EmberCliRailsAssetsHelper do
           EmberCli::Assets::NotSupportedError,
           /include_ember_script_tags/,
         )
+      end
+    end
+
+    context "when the application is a classic build" do
+      it "mounts the build's stylesheets onto `prepend`, leaving the ones hosted elsewhere untouched" do
+        app = instance_double(EmberCli::App, build: true, dev_server?: false)
+        paths = instance_double(EmberCli::Assets::Paths, vite?: false)
+        lookup = instance_double(
+          EmberCli::Assets::Lookup,
+          stylesheet_assets: [
+            "assets/vendor-abc123.css",
+            "https://fonts.example.com/css?family=Frontend",
+            "//fonts.example.com/protocol-relative.css",
+          ],
+        )
+        allow(EmberCli).to receive(:[]).with(:frontend).and_return(app)
+        allow(EmberCli::Assets::Paths).
+          to receive(:new).with(app).and_return(paths)
+        allow(EmberCli::Assets::Lookup).
+          to receive(:new).with(app).and_return(lookup)
+
+        tags = helper.include_ember_stylesheet_tags(:frontend, prepend: "http://example.com/")
+
+        expect(tags).to include(%{href="http://example.com/assets/vendor-abc123.css"})
+        expect(tags).to include(%{href="https://fonts.example.com/css?family=Frontend"})
+        expect(tags).to include(%{href="//fonts.example.com/protocol-relative.css"})
       end
     end
   end

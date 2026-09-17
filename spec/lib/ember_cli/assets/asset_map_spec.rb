@@ -29,6 +29,55 @@ describe EmberCli::Assets::AssetMap do
       ])
     end
 
+    it "passes scripts hosted outside the build through untouched" do
+      asset_map = {
+        "assets" => {
+          "bar.js" => "bar-abc123.js",
+        },
+        "prepend" => "foo/",
+      }
+      index_html = StringIO.new(<<~HTML)
+        <html>
+          <head>
+            <script src="https://cdn.example.com/analytics.js"></script>
+            <script src="//cdn.example.com/protocol-relative.js"></script>
+            <script src="bar-abc123.js"></script>
+          </head>
+        </html>
+      HTML
+      assets = build_assets(name: "bar", asset_map: asset_map, index_html: index_html)
+
+      javascripts = assets.javascripts
+
+      expect(javascripts).to match_array([
+        "https://cdn.example.com/analytics.js",
+        "//cdn.example.com/protocol-relative.js",
+        "foo/bar-abc123.js",
+      ])
+    end
+
+    it "ignores scripts without a `src`" do
+      asset_map = {
+        "assets" => {
+          "bar.js" => "bar-abc123.js",
+        },
+        "prepend" => "foo/",
+      }
+      index_html = StringIO.new(<<~HTML)
+        <html>
+          <head>
+            <script>window.EmberENV = {};</script>
+            <script src="bar-abc123.js"></script>
+          </head>
+        </html>
+      HTML
+      assets = build_assets(name: "bar", asset_map: asset_map, index_html: index_html)
+
+      javascripts = assets.javascripts
+
+      expect(javascripts).to match_array(["foo/bar-abc123.js"])
+    end
+
     context "when the asset_map is empty" do
       it "raises a BuildError" do
         assets = build_assets(asset_map: {}, name: "bar", index_html: StringIO.new)
@@ -63,6 +112,33 @@ describe EmberCli::Assets::AssetMap do
       expect(stylesheets).to match_array([
         "foo/bar-abc123.css",
         "foo/vendor-abc123.css",
+      ])
+    end
+
+    it "passes stylesheets hosted outside the build through untouched" do
+      asset_map = {
+        "assets" => {
+          "bar.css" => "bar-abc123.css",
+        },
+        "prepend" => "foo/",
+      }
+      index_html = StringIO.new(<<~HTML)
+        <html>
+          <head>
+            <link rel="stylesheet" href="https://fonts.example.com/css?family=Bar"></link>
+            <link rel="stylesheet" href="//fonts.example.com/protocol-relative.css"></link>
+            <link rel="stylesheet" href="bar-abc123.css"></link>
+          </head>
+        </html>
+      HTML
+      assets = build_assets(name: "bar", asset_map: asset_map, index_html: index_html)
+
+      stylesheets = assets.stylesheets
+
+      expect(stylesheets).to match_array([
+        "https://fonts.example.com/css?family=Bar",
+        "//fonts.example.com/protocol-relative.css",
+        "foo/bar-abc123.css",
       ])
     end
 
