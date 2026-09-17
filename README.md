@@ -29,7 +29,7 @@ $ bundle install
 ```
 
 The helpers render what [`ember-cli-rails`][ember-cli-rails] reports about a
-built application, so they require `ember-cli-rails >= 0.15.0`.
+built application, so they require the release of it that reports that.
 
 ## Setup
 
