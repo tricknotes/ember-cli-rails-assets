@@ -104,7 +104,7 @@ describe EmberCliRailsAssetsHelper do
   def build_app(**stubs)
     app = instance_double(
       EmberCli::App,
-      **{ build: true, dev_server?: false, vite?: false }.merge(stubs),
+      build: true, dev_server?: false, vite?: false, **stubs,
     )
     allow(EmberCli).to receive(:[]).with(:frontend).and_return(app)
 
