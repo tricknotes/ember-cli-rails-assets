@@ -46,7 +46,7 @@ module EmberCli
       def asset_matching(url)
         matching_asset = path_suffixes(url).find { |suffix| files.include?(suffix) }
 
-        if matching_asset.nil?
+        unless matching_asset
           raise_missing_asset(url)
         end
 
