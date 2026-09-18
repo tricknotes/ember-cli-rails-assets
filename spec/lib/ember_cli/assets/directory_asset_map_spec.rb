@@ -19,6 +19,16 @@ describe EmberCli::Assets::DirectoryAssetMap do
         "third" => "third",
       )
     end
+
+    it "represents the files nested in the directory by their path within it" do
+      create_file("font-awesome/css/font-awesome.min.css")
+
+      directory_manifest = build_directory_asset_map(directory).to_h
+
+      expect(directory_manifest["assets"]).to match a_hash_including(
+        "font-awesome/css/font-awesome.min.css" => "font-awesome/css/font-awesome.min.css",
+      )
+    end
   end
 
   def build_directory_asset_map(directory)
@@ -28,6 +38,7 @@ describe EmberCli::Assets::DirectoryAssetMap do
   def create_file(name)
     path = directory.join(name)
 
+    FileUtils.mkdir_p(path.dirname)
     FileUtils.touch(path)
 
     File.new(path)

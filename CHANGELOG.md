@@ -1,3 +1,9 @@
+main
+------
+
+* Represent the files nested in `dist/assets` in the asset map, so that a stylesheet or script an addon ships in a subdirectory (`assets/font-awesome/css/font-awesome.min.css`) resolves
+* Resolve an asset by the longest trailing path that `index.html` and the build output agree on, rather than by file name alone
+
 0.9.1
 ------
 

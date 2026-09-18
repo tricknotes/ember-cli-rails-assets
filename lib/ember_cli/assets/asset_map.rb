@@ -39,18 +39,26 @@ module EmberCli
         elsif Url.remote?(url)
           url
         else
-          asset_matching(/#{Regexp.escape(File.basename(url))}\z/)
+          asset_matching(url)
         end
       end
 
-      def asset_matching(regex)
-        matching_asset = files.detect { |asset| asset =~ regex }
+      # `index.html` references an asset through the build's `rootURL`, while the asset map keys the same file by its path within the build output, so match on the longest trailing path the two agree on.
+      def asset_matching(url)
+        matching_asset = path_suffixes(url).find { |suffix| files.include?(suffix) }
 
-        if matching_asset.to_s.empty?
-          raise_missing_asset(regex)
+        if matching_asset.nil?
+          raise_missing_asset(url)
         end
 
         prepend + matching_asset
+      end
+
+      # Every trailing path of `url`, longest first: `/my-app/assets/font-awesome/css/font-awesome.css` yields `my-app/assets/font-awesome/css/font-awesome.css`, then `assets/font-awesome/css/font-awesome.css`, down to `font-awesome.css`.
+      def path_suffixes(url)
+        segments = url.split("/").reject(&:empty?)
+
+        segments.each_index.map { |index| segments[index..].join("/") }
       end
 
       def prepend
@@ -65,8 +73,8 @@ module EmberCli
         asset_map["assets"] || {}
       end
 
-      def raise_missing_asset(regex)
-        raise BuildError.new("Failed to find assets matching `#{regex}`")
+      def raise_missing_asset(url)
+        raise BuildError.new("Failed to find assets matching `#{url}`")
       end
 
       def assert_asset_map!
