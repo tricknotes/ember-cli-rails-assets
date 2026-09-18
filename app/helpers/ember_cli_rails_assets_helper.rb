@@ -1,6 +1,7 @@
 require "ember_cli/assets/errors"
 require "ember_cli/assets/lookup"
 require "ember_cli/assets/paths"
+require "ember_cli/assets/url"
 
 module EmberCliRailsAssetsHelper
   def include_ember_script_tags(name, prepend: "")
@@ -39,7 +40,7 @@ module EmberCliRailsAssetsHelper
     assets = EmberCli::Assets::Lookup.new(app)
 
     assets.stylesheet_assets.
-      map { |src| [prepend, src].join }.
+      map { |src| mount_asset(src, prepend) }.
       map { |src| %{<link rel="stylesheet" href="#{src}">}.html_safe }.
       inject(&:+)
   end
@@ -69,9 +70,19 @@ module EmberCliRailsAssetsHelper
     assets = EmberCli::Assets::Lookup.new(app)
 
     assets.javascript_assets.
-      map { |src| [prepend, src].join }.
+      map { |src| mount_asset(src, prepend) }.
       map { |src| %{<script src="#{src}"></script>}.html_safe }.
       inject(&:+)
+  end
+
+  # `prepend` mounts the build's assets onto a path (or another host), so it only applies to the URLs that point into the build.
+  # Assets hosted elsewhere (a CDN, a font service) are already absolute.
+  def mount_asset(src, prepend)
+    if EmberCli::Assets::Url.remote?(src)
+      src
+    else
+      [prepend, src].join
+    end
   end
 
   # Vite builds boot from ES modules declared in dist/index.html, so extract
