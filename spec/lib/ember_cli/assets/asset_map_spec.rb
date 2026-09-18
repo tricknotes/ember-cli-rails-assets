@@ -142,6 +142,80 @@ describe EmberCli::Assets::AssetMap do
       ])
     end
 
+    it "includes the stylesheets nested in the build" do
+      asset_map = {
+        "assets" => {
+          "bar.css" => "bar-abc123.css",
+          "font-awesome/css/font-awesome.min.css" => "font-awesome/css/font-awesome.min.css",
+        },
+        "prepend" => "foo/",
+      }
+      index_html = StringIO.new(<<~HTML)
+        <html>
+          <head>
+            <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css"></link>
+            <link rel="stylesheet" href="bar-abc123.css"></link>
+          </head>
+        </html>
+      HTML
+      assets = build_assets(name: "bar", asset_map: asset_map, index_html: index_html)
+
+      stylesheets = assets.stylesheets
+
+      expect(stylesheets).to match_array([
+        "foo/font-awesome/css/font-awesome.min.css",
+        "foo/bar-abc123.css",
+      ])
+    end
+
+    it "resolves the stylesheets referenced through a `rootURL`" do
+      asset_map = {
+        "assets" => {
+          "bar.css" => "bar-abc123.css",
+          "font-awesome/css/font-awesome.min.css" => "font-awesome/css/font-awesome.min.css",
+        },
+        "prepend" => "foo/",
+      }
+      index_html = StringIO.new(<<~HTML)
+        <html>
+          <head>
+            <link rel="stylesheet" href="/my-app/assets/font-awesome/css/font-awesome.min.css"></link>
+            <link rel="stylesheet" href="/my-app/assets/bar-abc123.css"></link>
+          </head>
+        </html>
+      HTML
+      assets = build_assets(name: "bar", asset_map: asset_map, index_html: index_html)
+
+      stylesheets = assets.stylesheets
+
+      expect(stylesheets).to match_array([
+        "foo/font-awesome/css/font-awesome.min.css",
+        "foo/bar-abc123.css",
+      ])
+    end
+
+    it "prefers the asset whose path matches over one that only shares its basename" do
+      asset_map = {
+        "assets" => {
+          "app.css" => "app.css",
+          "font-awesome/css/app.css" => "font-awesome/css/app.css",
+        },
+        "prepend" => "foo/",
+      }
+      index_html = StringIO.new(<<~HTML)
+        <html>
+          <head>
+            <link rel="stylesheet" href="assets/font-awesome/css/app.css"></link>
+          </head>
+        </html>
+      HTML
+      assets = build_assets(name: "bar", asset_map: asset_map, index_html: index_html)
+
+      stylesheets = assets.stylesheets
+
+      expect(stylesheets).to eq(["foo/font-awesome/css/app.css"])
+    end
+
     context "when the asset_map is empty" do
       it "raises a BuildError" do
         assets = build_assets(asset_map: {}, name: "bar", index_html: StringIO.new)

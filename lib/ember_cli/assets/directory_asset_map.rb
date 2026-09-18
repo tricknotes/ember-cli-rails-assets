@@ -1,3 +1,5 @@
+require "pathname"
+
 module EmberCli
   module Assets
     class DirectoryAssetMap
@@ -18,7 +20,7 @@ module EmberCli
 
       def files_with_data
         files.reduce({}) do |manifest, file|
-          name = File.basename(file.path)
+          name = file.relative_path_from(directory).to_s
 
           manifest[name] = name
 
@@ -26,9 +28,8 @@ module EmberCli
         end
       end
 
-
       def files
-        directory.children.map { |path| File.new(path) }
+        directory.glob("**/*", File::FNM_DOTMATCH).select(&:file?)
       end
     end
   end
