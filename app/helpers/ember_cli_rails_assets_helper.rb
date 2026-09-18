@@ -6,8 +6,6 @@ module EmberCliRailsAssetsHelper
     app.build
 
     if app.dev_server? || app.vite?
-      # Vite-based applications boot from the tags declared in their
-      # `index.html`, which ember-cli-rails extracts for us.
       safe_join(app.startup_tags(prepend: prepend).map(&:html_safe), "\n")
     else
       tags_for(app.javascript_assets(prepend: prepend)) do |src|
@@ -37,9 +35,6 @@ module EmberCliRailsAssetsHelper
 
   private
 
-  # Classic (Broccoli-based) builds ship a fixed set of assets, which
-  # ember-cli-rails reports already mounted onto `prepend`, so emit a plain
-  # tag per asset.
   def tags_for(assets)
     assets.
       map { |asset| yield(asset).html_safe }.
