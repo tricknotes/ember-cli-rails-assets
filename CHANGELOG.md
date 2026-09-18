@@ -1,4 +1,4 @@
-main
+0.9.2
 ------
 
 * Represent the files nested in `dist/assets` in the asset map, so that a stylesheet or script an addon ships in a subdirectory (`assets/font-awesome/css/font-awesome.min.css`) resolves
