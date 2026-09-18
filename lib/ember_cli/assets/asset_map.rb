@@ -43,7 +43,6 @@ module EmberCli
         end
       end
 
-      # `index.html` references an asset through the build's `rootURL`, while the asset map keys the same file by its path within the build output, so match on the longest trailing path the two agree on.
       def asset_matching(url)
         matching_asset = path_suffixes(url).find { |suffix| files.include?(suffix) }
 
@@ -54,7 +53,6 @@ module EmberCli
         prepend + matching_asset
       end
 
-      # Every trailing path of `url`, longest first: `/my-app/assets/font-awesome/css/font-awesome.css` yields `my-app/assets/font-awesome/css/font-awesome.css`, then `assets/font-awesome/css/font-awesome.css`, down to `font-awesome.css`.
       def path_suffixes(url)
         segments = url.split("/").reject(&:empty?)
 
