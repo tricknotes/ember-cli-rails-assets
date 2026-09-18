@@ -1,4 +1,4 @@
-main
+0.9.1
 ------
 
 * Emit the scripts and stylesheets that `index.html` points outside the build (a CDN, a font service) as they are, instead of failing to resolve them against the build output
