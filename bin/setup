@@ -9,9 +9,8 @@ bundle check || bundle install
 # Add binstubs to PATH via export PATH=".git/safe/../../bin:$PATH" in ~/.zshenv
 mkdir -p .git/safe
 
-# `classic` is pinned to the last release built by Broccoli, and `vite` to the
-# Vite-based blueprint that `ember-cli >= 6.8` generates.
-EMBER_BUILD="${EMBER_BUILD:-classic}"
+# `vite` is pinned to the Vite-based blueprint that `ember-cli >= 6.8` generates, and `classic` to the last release built by Broccoli.
+EMBER_BUILD="${EMBER_BUILD:-vite}"
 
 if ! [ -d spec/dummy/my-app ]; then
   case "$EMBER_BUILD" in
