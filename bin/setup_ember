@@ -6,6 +6,11 @@ set -e
 sed -i -e 's/history/hash/' spec/dummy/my-app/config/environment.js
 
 # add an image to a template
-echo '<img src="assets/logo.png">' >> spec/dummy/my-app/app/templates/application.hbs
+if [ -f spec/dummy/my-app/app/templates/application.gjs ]; then
+  sed -i -e 's|</template>|  <img src="assets/logo.png">\n</template>|' \
+    spec/dummy/my-app/app/templates/application.gjs
+else
+  echo '<img src="assets/logo.png">' >> spec/dummy/my-app/app/templates/application.hbs
+fi
 mkdir -p spec/dummy/my-app/public/assets
 cp spec/fixtures/logo.png spec/dummy/my-app/public/assets/

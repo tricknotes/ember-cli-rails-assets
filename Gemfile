@@ -13,12 +13,6 @@ end
 gem "rails", rails_constraint
 gem "webrick"
 
-group :development, :test do
-  # The specs verify doubles against the development-server API,
-  # which ships with 0.13.0.
-  gem "ember-cli-rails", ">= 0.13.0"
-end
-
 group :test do
   gem "cuprite"
 
@@ -30,3 +24,9 @@ group :test do
     gem "rspec-rails"
   end
 end
+
+# The helpers render an API that ember-cli-rails has not released yet, so
+# resolve it from the branch that adds it.
+# Remove this once that release is published; the gemspec constraint takes
+# over from there.
+gem "ember-cli-rails", github: "tricknotes/ember-cli-rails", branch: "claude/intelligent-goodall-foai0r"

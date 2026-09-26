@@ -9,19 +9,34 @@ bundle check || bundle install
 # Add binstubs to PATH via export PATH=".git/safe/../../bin:$PATH" in ~/.zshenv
 mkdir -p .git/safe
 
+# `vite` is pinned to the Vite-based blueprint that `ember-cli >= 6.8` generates, and `classic` to the last release built by Broccoli.
+EMBER_BUILD="${EMBER_BUILD:-vite}"
+
 if ! [ -d spec/dummy/my-app ]; then
-  # Pinned to the last release built by Broccoli: the feature suite
-  # exercises the classic build. The Vite path of
-  # `include_ember_script_tags` is exercised by ember-cli-rails' own suite.
-  git clone --branch v6.7.2 \
-    https://github.com/kellyselden/ember-cli-output.git spec/dummy/my-app
+  case "$EMBER_BUILD" in
+    classic)
+      git clone --branch v6.7.2 \
+        https://github.com/kellyselden/ember-cli-output.git spec/dummy/my-app
+      ;;
+    vite)
+      git clone --branch v7.0.0 \
+        https://github.com/ember-cli/ember-new-output.git spec/dummy/my-app
+      ;;
+    *)
+      echo "Unsupported EMBER_BUILD '${EMBER_BUILD}'; use classic or vite" >&2
+      exit 1
+      ;;
+  esac
 
   bin/setup_ember
 fi
 
 root="$(pwd)"
 
-cd ${root}/spec/dummy/my-app &&
-  yarn add --dev ember-cli-rails-addon@rondale-sc/ember-cli-rails-addon
+# `ember-cli-rails-addon` is incompatible with the Vite-based build.
+if ! [ -f spec/dummy/my-app/vite.config.mjs ]; then
+  cd ${root}/spec/dummy/my-app &&
+    yarn add --dev ember-cli-rails-addon@rondale-sc/ember-cli-rails-addon
+fi
 
 cd ${root}/spec/dummy && bundle exec rake ember:install

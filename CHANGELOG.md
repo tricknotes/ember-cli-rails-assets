@@ -1,3 +1,9 @@
+main
+------
+
+* Render what `ember-cli-rails` reports about a built application instead of deriving it here. This removes `EmberCli::Assets::Paths`, `EmberCli::Assets::Lookup`, `EmberCli::Assets::AssetMap`, `EmberCli::Assets::DirectoryAssetMap` and `EmberCli::Assets::Url`, and a missing or unresolvable asset now raises `EmberCli::BuildError` rather than `EmberCli::Assets::BuildError`
+* Declare the dependency on `ember-cli-rails`, which the helpers have always needed at runtime. `ember-cli-rails` no longer depends on this gem, so an application that renders the helpers adds both to its `Gemfile`
+
 0.9.2
 ------
 

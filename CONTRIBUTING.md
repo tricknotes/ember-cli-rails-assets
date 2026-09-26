@@ -16,6 +16,11 @@ After cloning the repository, execute the setup script:
 
     $ bin/setup
 
+It builds the dummy Ember application from the Vite-based blueprint.
+To build it with the classic (Broccoli-based) pipeline instead, remove `spec/dummy/my-app` if it exists and set `EMBER_BUILD`:
+
+    $ EMBER_BUILD=classic bin/setup
+
 Make sure the tests pass:
 
     $ bin/rake

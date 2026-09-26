@@ -1,3 +1,4 @@
+require "ember-cli-rails"
 require "ember_cli/assets/engine"
 
 module EmberCli

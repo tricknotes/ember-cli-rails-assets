@@ -9,7 +9,8 @@ on:
 jobs:
   build:
     # Named explicitly so that `experimental` stays out of the job name.
-    name: "build (${{ matrix.ruby }}, ${{ matrix.rails }})"
+    # The Vite-based build is the default, so only the classic one is named.
+    name: "build (Ruby ${{ matrix.ruby }}, Rails ${{ matrix.rails }}${{ matrix.ember != 'vite' && format(', {0}', matrix.ember) || '' }})"
     runs-on: "ubuntu-latest"
 
     # Jobs normally finish in about 3 minutes, so cap hung runs well short
@@ -24,20 +25,41 @@ jobs:
       matrix:
         ruby: ["3.2", "3.3"]
         rails: ["7.0", "7.1", "7.2"]
+        # A key of the matrix itself, so that the classic builds below run alongside these rather than replacing them.
+        ember: ["vite"]
         include:
           - ruby: "3.3"
             rails: "8.0"
+            ember: "vite"
           - ruby: "3.4"
             rails: "8.0"
+            ember: "vite"
+          - ruby: "4.0"
+            rails: "7.2"
+            ember: "vite"
+          - ruby: "4.0"
+            rails: "8.0"
+            ember: "vite"
           - ruby: "4.0"
             rails: "8.1"
+            ember: "vite"
           - ruby: "3.4"
             rails: "main"
+            ember: "vite"
             experimental: true
+          # The classic build at both ends of the supported range: the oldest Ruby, Rails and Node, and the newest.
+          - ruby: "3.2"
+            rails: "7.0"
+            ember: "classic"
+            node: "20.x"
+          - ruby: "4.0"
+            rails: "8.1"
+            ember: "classic"
 
     env:
       RAILS_ENV: test
       RAILS_VERSION: "${{ matrix.rails }}"
+      EMBER_BUILD: "${{ matrix.ember }}"
 
     steps:
       - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2.7.0
@@ -51,7 +73,7 @@ jobs:
       - name: Install NodeJS
         uses: actions/setup-node@7c12f8017d5436eb855f1ed4399f037a36fbd9e8 # v2.5.2
         with:
-          node-version: "20.x"
+          node-version: "${{ matrix.node || '26.x' }}"
 
       - name: Setup Google Chrome
         uses: browser-actions/setup-chrome@latest

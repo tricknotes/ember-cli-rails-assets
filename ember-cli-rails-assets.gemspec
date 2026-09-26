@@ -16,5 +16,8 @@ Gem::Specification.new do |s|
 
   s.files = Dir["{app,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
-  s.add_dependency 'nokogiri'
+  # The helpers render what ember-cli-rails reports about a built application.
+  # Constrain this to the release that reports it once that release is
+  # published.
+  s.add_dependency "ember-cli-rails"
 end
