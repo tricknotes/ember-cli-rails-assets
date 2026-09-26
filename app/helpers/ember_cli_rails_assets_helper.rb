@@ -2,23 +2,21 @@ require "ember_cli/assets/errors"
 
 module EmberCliRailsAssetsHelper
   def include_ember_script_tags(name, prepend: "")
-    app = EmberCli[name]
-    app.build
+    embedding = build_ember_embedding(name)
 
-    if app.dev_server? || app.vite?
-      safe_join(app.startup_tags(prepend: prepend).map(&:html_safe), "\n")
+    if embedding.startup_tags?
+      safe_join(embedding.startup_tags(prepend: prepend).map(&:html_safe), "\n")
     else
-      tags_for(app.javascript_assets(prepend: prepend)) do |src|
+      tags_for(embedding.javascript_assets(prepend: prepend)) do |src|
         %{<script src="#{src}"></script>}
       end
     end
   end
 
   def include_ember_stylesheet_tags(name, prepend: "")
-    app = EmberCli[name]
-    app.build
+    embedding = build_ember_embedding(name)
 
-    if app.dev_server? || app.vite?
+    if embedding.startup_tags?
       raise EmberCli::Assets::NotSupportedError, <<~MSG
         `include_ember_stylesheet_tags` does not support Vite-based
         applications (`ember-cli >= 6.8`).
@@ -28,12 +26,19 @@ module EmberCliRailsAssetsHelper
       MSG
     end
 
-    tags_for(app.stylesheet_assets(prepend: prepend)) do |href|
+    tags_for(embedding.stylesheet_assets(prepend: prepend)) do |href|
       %{<link rel="stylesheet" href="#{href}">}
     end
   end
 
   private
+
+  def build_ember_embedding(name)
+    app = EmberCli[name]
+    app.build
+
+    EmberCli::Embedding.new(app)
+  end
 
   def tags_for(assets)
     assets.
