@@ -10,7 +10,7 @@ jobs:
   build:
     # Named explicitly so that `experimental` stays out of the job name.
     # The Vite-based build is the default, so only the classic one is named.
-    name: "build (${{ matrix.ruby }}, ${{ matrix.rails }}${{ matrix.ember != 'vite' && format(', {0}', matrix.ember) || '' }})"
+    name: "build (Ruby ${{ matrix.ruby }}, Rails ${{ matrix.rails }}${{ matrix.ember != 'vite' && format(', {0}', matrix.ember) || '' }})"
     runs-on: "ubuntu-latest"
 
     # Jobs normally finish in about 3 minutes, so cap hung runs well short
