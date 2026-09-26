@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     # Named explicitly so that `experimental` stays out of the job name.
-    name: "build (${{ matrix.ruby }}, ${{ matrix.rails }})"
+    name: "build (${{ matrix.ruby }}, ${{ matrix.rails }}${{ matrix.ember && format(', {0}', matrix.ember) || '' }})"
     runs-on: "ubuntu-latest"
 
     # Jobs normally finish in about 3 minutes, so cap hung runs well short
@@ -31,6 +31,10 @@ jobs:
             rails: "8.0"
           - ruby: "4.0"
             rails: "8.1"
+          - ruby: "4.0"
+            rails: "8.1"
+            ember: "vite"
+            node: "22.x"
           - ruby: "3.4"
             rails: "main"
             experimental: true
@@ -38,6 +42,7 @@ jobs:
     env:
       RAILS_ENV: test
       RAILS_VERSION: "${{ matrix.rails }}"
+      EMBER_BUILD: "${{ matrix.ember || 'classic' }}"
 
     steps:
       - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2.7.0
@@ -51,7 +56,7 @@ jobs:
       - name: Install NodeJS
         uses: actions/setup-node@7c12f8017d5436eb855f1ed4399f037a36fbd9e8 # v2.5.2
         with:
-          node-version: "20.x"
+          node-version: "${{ matrix.node || '20.x' }}"
 
       - name: Setup Google Chrome
         uses: browser-actions/setup-chrome@latest
